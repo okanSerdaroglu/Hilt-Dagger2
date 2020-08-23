@@ -5,7 +5,7 @@ import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
+@AndroidEntryPoint // be able to have dependencies inject in
 class MainActivity : AppCompatActivity() {
 
     // field injection
@@ -16,13 +16,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         println(someClass.doSomething())
+        println(someClass.doSomeOtherThing())
     }
 }
 
 class SomeClass
 @Inject
-constructor() {
+constructor(
+    private val someOtherClass: SomeOtherClass
+) {
     fun doSomething(): String {
-        return "Look ..."
+        return "Look I did a thing"
+    }
+
+    fun doSomeOtherThing(): String {
+        return someOtherClass.doSomeOtherThing()
+    }
+}
+
+class SomeOtherClass
+@Inject
+constructor() {
+    fun doSomeOtherThing(): String {
+        return "Look I did some other thing"
     }
 }
