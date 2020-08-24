@@ -1,0 +1,15 @@
+Scope annotations for each generated components
+
+    Android class	                             Generated component	            Scope
+    Application	                                 ApplicationComponent	            @Singleton
+    View Model	                                 ActivityRetainedComponent	        @ActivityRetainedScope
+    Activity	                                 ActivityComponent	                @ActivityScoped
+    Fragment	                                 FragmentComponent	                @FragmentScoped
+    View	                                     ViewComponent	                    @ViewScoped
+    View annotated with @WithFragmentBindings	 ViewWithFragmentComponent	        @ViewScoped
+    Service	                                     ServiceComponent	                @ServiceScoped
+
+
+https://developer.android.com/training/dependency-injection/hilt-android#component-scopes
+Not : The anything that is activity retained scope cannot be injected into something that singleton scope. Anything
+that's activity scoped cannot be injected into activity retained scope.
