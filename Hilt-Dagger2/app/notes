@@ -13,3 +13,8 @@ Scope annotations for each generated components
 https://developer.android.com/training/dependency-injection/hilt-android#component-scopes
 Not : The anything that is activity retained scope cannot be injected into something that singleton scope. Anything
 that's activity scoped cannot be injected into activity retained scope.
+
+** Constructor injection problems
+
+   1 - Interface instance
+   2 - Third part library instance

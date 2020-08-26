@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
-import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 @AndroidEntryPoint // be able to have dependencies inject in
@@ -20,8 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        println(someClass.doSomething())
-        println(someClass.doSomeOtherThing())
+        println(someClass.doAThing())
     }
 }
 
@@ -31,14 +28,18 @@ class MainActivity : AppCompatActivity() {
 class SomeClass
 @Inject
 constructor(
-    private val someOtherClass: SomeOtherClass
+    private val someInterface: SomeInterface
 ) {
-    fun doSomething(): String {
-        return "Look I did a thing"
+    fun doAThing(): String {
+        return "Look I got: ${someInterface.getAThing()}"
     }
+}
 
-    fun doSomeOtherThing(): String {
-        return someOtherClass.doSomeOtherThing()
+class SomeDependency
+@Inject
+constructor() {
+    fun getAThing(): String {
+        return "A Thing"
     }
 }
 
@@ -50,15 +51,25 @@ constructor(
 class MyFragment : Fragment() {
 
     @Inject
-    lateinit var someOtherClass: SomeOtherClass
+    lateinit var someClass: SomeClass
 
 }
 
 
-class SomeOtherClass
+class SomeInterfaceImpl
 @Inject
-constructor() {
+constructor() : SomeInterface {
     fun doSomeOtherThing(): String {
         return "Look I did some other thing"
     }
+
+    override fun getAThing(): String {
+        return "A thing"
+    }
 }
+
+interface SomeInterface {
+    fun getAThing(): String
+}
+
+
