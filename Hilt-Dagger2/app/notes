@@ -18,3 +18,25 @@ that's activity scoped cannot be injected into activity retained scope.
 
    1 - Interface instance
    2 - Third part library instance
+
+
+** Binds and Provides
+
+@InstallIn(ApplicationComponent::class) // lives as long as Application lives
+@Module
+abstract class MyModule {
+
+    @ActivityScoped
+    @Binds
+    abstract fun bindSomeDependency(
+        someInterfaceImpl: SomeInterfaceImpl
+    ): SomeInterface
+
+    @ActivityScoped
+    @Binds
+    abstract fun bindGson(
+        gson: Gson
+    ): Gson
+
+}
+
