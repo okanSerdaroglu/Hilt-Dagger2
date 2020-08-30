@@ -3,7 +3,6 @@ package com.okan.hilt_dagger2
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 
@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        println(someClass.doAThing())
+        println(someClass.doAThing1())
+        println(someClass.doAThing2())
     }
 }
 
@@ -34,11 +35,15 @@ class MainActivity : AppCompatActivity() {
 class SomeClass
 @Inject
 constructor(
-    private val someInterface: SomeInterface,
-    private val gson: Gson
+    @Impl1 private val someInterface1: SomeInterface,
+    @Impl2 private val someInterface2: SomeInterface
 ) {
-    fun doAThing(): String {
-        return "Look I got: ${someInterface.getAThing()}"
+    fun doAThing1(): String {
+        return "Look I got: ${someInterface1.getAThing()}"
+    }
+
+    fun doAThing2(): String {
+        return "Look I got: ${someInterface2.getAThing()}"
     }
 }
 
@@ -63,17 +68,19 @@ class MyFragment : Fragment() {
 }
 
 
-class SomeInterfaceImpl
+class SomeInterfaceImpl1
 @Inject
-constructor(
-    private val someDependency: String
-) : SomeInterface {
-    fun doSomeOtherThing(): String {
-        return "Look I did some other thing"
-    }
-
+constructor() : SomeInterface {
     override fun getAThing(): String {
-        return "A thing,${someDependency}"
+        return "A thing1"
+    }
+}
+
+class SomeInterfaceImpl2
+@Inject
+constructor() : SomeInterface {
+    override fun getAThing(): String {
+        return "A thing2"
     }
 }
 
@@ -85,26 +92,27 @@ interface SomeInterface {
 @Module
 class MyModule {
 
+    @Impl1
     @Singleton
     @Provides
-    fun provideSomeString(): String {
-        return "some string"
+    fun provideSomeInterface1(): SomeInterface {
+        return SomeInterfaceImpl1()
     }
 
+    @Impl2
     @Singleton
     @Provides
-    fun provideSomeInterface(
-        someString: String
-    ): SomeInterface {
-        return SomeInterfaceImpl(someString)
-    }
-
-    @Singleton
-    @Provides
-    fun provideGson(): Gson {
-        return Gson()
+    fun provideSomeInterface2(): SomeInterface {
+        return SomeInterfaceImpl2()
     }
 
 }
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Impl1
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Impl2
 
